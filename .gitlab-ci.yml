@@ -1,0 +1,11 @@
+stages:
+  - test
+  - deploy
+
+Test:
+  image: python:3
+  stage: test
+  script:
+    - pip3 install poetry
+    - pip3 install nox==2020.5.24
+    - nox
