@@ -3,9 +3,18 @@ stages:
   - deploy
 
 Test:
-  image: python:3
+  image: python:3.8
   stage: test
+  before_script:
+    - apt-get -qq update
+    - apt-get install -y libglib2.0
+    - apt-get install -y libnss3
+    - apt-get install -y libgconf-2-4
+    - apt-get install -y libfontconfig1
+    - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    - apt-get install -y ./google-chrome-stable_current_amd64.deb
   script:
     - pip3 install poetry
     - pip3 install nox==2020.5.24
+    - chmod 777 chromedriver_linux
     - nox
