@@ -12,9 +12,9 @@ from src.friend_set import FriendSet
 
 
 class FriendNetwork(object):
-    def __init__(self, friends: Optional[FriendSet] = None, common_friends: Dict[str, FriendSet] = None):
+    def __init__(self, friends: Optional[FriendSet] = None, common_friends: Optional[Dict[str, FriendSet]] = None):
         self.friends = friends or FriendSet([])
-        self.common_friends = common_friends or FriendSet([])
+        self.common_friends = common_friends or {}
 
         self.node_positions = None
         self.graph = nx.Graph()
@@ -81,6 +81,15 @@ class FriendNetwork(object):
     def compute_positions(self, layout=nx.spring_layout):
         self.node_positions = layout(self.graph)
 
+    def get_node_to_community_mapping(self, communities) -> pd.Series:
+        node_to_community = {}
+        for community_index, community in enumerate(communities, start=1):
+            node_to_community.update(
+                {node: community_index for node in community}
+            )
+
+        return pd.Series(node_to_community).reindex(self.graph.nodes).fillna(0).astype("int64")
+
     def draw_graph(self, node_scores=None, node_communities=None, label_proportion=0.1):  # pragma: no cover
         def get_random_labels(p):
             labels = {}
@@ -104,14 +113,14 @@ class FriendNetwork(object):
                 node: self.graph.nodes[node]["name"]
                 for node in nodes_with_score_higher_than_threshold
             }
-            color = node_scores
+            color = node_scores_series
         else:
             labels = get_random_labels(label_proportion)
             if node_communities is not None:
-                node_communities = pd.Series(node_communities)
-                color = cm.get_cmap('Paired')(node_communities.loc[list(self.graph.nodes)])
+                node_to_community_mapping = self.get_node_to_community_mapping(node_communities)
+                color = cm.get_cmap('Paired')(node_to_community_mapping)
 
-        return nx.draw(
+        nx.draw(
             self.graph,
             pos=self.node_positions,
             node_size=45,
@@ -121,3 +130,5 @@ class FriendNetwork(object):
             with_labels=True,
             labels=labels
         )
+
+        return ax

@@ -41,7 +41,6 @@ source = ["src", "*/site-packages"]
 [tool.coverage.run]
 branch = true
 source = ["src"]
-omit = ["src/facebook_friend_network.py"]
 
 [tool.coverage.report]
 show_missing = true
