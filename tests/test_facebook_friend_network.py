@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.facebook_friend_network import FriendNetwork
+from src.friend_network import FriendNetwork
 from src.friend import Friend
 from src.friend_set import FriendSet
 

@@ -98,7 +98,7 @@ class FriendNetwork(object):
             node_scores_series = pd.Series(node_scores).loc[list(self.graph.nodes)]
             threshold_quantile = 1 - label_proportion
             nodes_with_score_higher_than_threshold = node_scores_series[
-                node_scores_series >= node_scores.quantile(threshold_quantile)
+                node_scores_series >= node_scores_series.quantile(threshold_quantile)
             ].index
             labels = {
                 node: self.graph.nodes[node]["name"]
