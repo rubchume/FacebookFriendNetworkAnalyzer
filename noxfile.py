@@ -109,9 +109,9 @@ def black(session):
 def mypy(session):
     args = session.posargs or mypy_locations
     if INSTALL_WITH_CONSTRAINTS:
-        install_with_constraints(session, "mypy")
+        install_with_constraints(session, "mypy", "types-requests")
     else:
-        session.install("mypy")
+        session.install("mypy", "types-requests")
     session.run("mypy", *args)
 
 

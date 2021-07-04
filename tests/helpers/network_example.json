@@ -1,0 +1,1 @@
+{"friend_list": [{"user_id": "123", "name": "Ruf", "link": "ruf.com", "gender": "MALE"}, {"user_id": "456", "name": "Pau", "link": "pau.com", "gender": "MALE"}], "common_friends": {"123": [{"user_id": "456", "name": "Pau", "link": "pau.com", "gender": null}], "456": [{"user_id": "123", "name": "Ruf", "link": "ruf.com", "gender": null}]}}
