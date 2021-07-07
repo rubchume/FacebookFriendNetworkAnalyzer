@@ -1,0 +1,22 @@
+@import "color_variables";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif&family=Open+Sans&family=Rouge+Script&display=swap');
+
+
+@mixin normalText(){
+    color: $text_color;
+    font-family: 'Noto Serif', sans-serif;
+    font-size: 14px;
+    line-height: 24px; margin: 0 0 24px;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+@mixin title(){
+  color: #111;
+  font-family: 'Rouge Script', sans-serif;
+  font-size: 60px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+  text-align: center;
+}

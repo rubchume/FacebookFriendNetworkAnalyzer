@@ -1,0 +1,73 @@
+@import "center";
+@import "delicate_typography";
+
+header {
+  background: $header_background_color;
+  color: $text_color;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+
+  h1 {
+    @include title();
+    margin: 0;
+    padding: 0.5vw 0.5vw;
+  }
+
+  nav {
+    display: flex;
+    ul{
+      margin: 0;
+      padding: 0vw;
+      display: flex;
+      li {
+        list-style-type: none;
+        margin: 0;
+        font-size: 3vh;
+        padding: 0vw 2vw;
+        display: flex;
+        align-items: center;
+        a{
+          text-decoration: none;
+          color: $text_color;
+          font-family: 'Open Sans', sans-serif;
+        }
+        &:hover {
+          background-color: $active_button_background_color;
+          a {color: $active_button_text_color;}
+        }
+      }
+    }
+    button{
+      display: none;
+    }
+    @media only screen and (max-width: 500px) {
+      ul{
+        flex-direction: column;
+      }
+      li{
+        margin: 0;
+      }
+      a{
+        display: block;
+      }
+      button{
+        /*makes the button visible*/
+        display: block;
+
+        /*since we are here, we can style it a little bit!*/
+        padding: 2vw;
+        font-size: 3vh;
+        background-color: #AFE0FF;
+        border: none;
+
+        /*outline none removes the default blue border that appears anytime you click on the button*/
+        outline: none;
+
+        cursor: pointer;
+        align-self: flex-start;
+      }
+    }
+
+  }
+}

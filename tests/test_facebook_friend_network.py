@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from src.facebook_friend_network import FriendNetwork
 from src.friend import Friend
+from src.friend_network import FriendNetwork
 from src.friend_set import FriendSet
 
 
@@ -24,5 +24,5 @@ class FacebookFriendNetworkTests(TestCase):
                 "123": FriendSet([Friend(user_id="456", name="Pau", link="pau.com", gender="MALE")]),
                 "456": FriendSet([Friend(user_id="123", name="Ruf", link="ruf.com", gender="MALE")]),
             },
-            ffn.common_friends
+            ffn.mutual_friends
         )

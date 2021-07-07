@@ -1,0 +1,118 @@
+@import "cool_button";
+@import "color_variables";
+@import "header";
+@import "delicate_typography";
+@import "center";
+
+
+body{
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  @include normalText();
+}
+
+
+h1 { color: #111; font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 300; line-height: 32px; margin: 0 0 72px; text-align: center; }
+h2 { color: #111; font-family: 'Open Sans', sans-serif; font-size: 20px; font-weight: 200; line-height: 32px; margin: 0 0 72px; text-align: center; }
+
+
+p {
+  @include flexCenter();
+  @include normalText();
+}
+
+
+.success {
+  color: $text_success_color;
+}
+
+
+.error {
+  color: $text_error_color;
+}
+
+
+.button {
+  @include coolButton();
+}
+
+
+table {
+  @include flexCenter();
+  border-spacing: 50px 10px;
+  tr {
+      text-align: right;
+  }
+}
+
+
+table.list {
+  display: table;
+  border-collapse: collapse;
+  text-align: center;
+  tr {
+      text-align: center;
+  }
+  table-layout: fixed;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  td, th {border: 1px solid;}
+  tbody tr:nth-child(even) {
+    td:not(.item-actions){
+      background: $light_color
+    }
+  }
+  tbody tr:nth-child(odd) {
+    td:not(.item-actions){
+      background: $delicate_color
+    }
+  }
+  tbody tr td.item-actions {
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+  }
+  thead {background: $dark_color;}
+}
+
+
+form {
+    @include flexCenter();
+    .helptext {
+      color: $text_annotations_color
+    }
+    .errorlist {
+      color: $text_error_color;
+      list-style: none;
+      li:before {
+        content: "\e000"; /* https://github.com/google/material-design-icons/blob/master/iconfont/codepoints */
+        font-family: "Material Icons";
+        padding-right: 8px;
+        color: $icon_error_color;
+      }
+    }
+    table {
+        tr {
+            vertical-align: top;
+            text-align: left;
+        }
+    }
+    input[type=submit] {
+        @include coolButton();
+        background-color: $button_background_color;
+    }
+}
+
+
+img {
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+}
+
+a {
+  text-decoration: none
+}

@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+Log In
+{% endblock %}
+
+{% block content %}
+Login with your Facebook user and password
+<form action="/login" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}

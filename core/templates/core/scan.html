@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+Scan panel
+{% endblock %}
+
+{% block content %}
+<h1>Scan panel</h1>
+
+{% for event in log %}
+{{event.text}}
+<br>
+{% endfor %}
+
+<script>
+window.setInterval('refresh()', 5000);
+
+function refresh() {
+    window.location.reload();
+}
+</script>
+
+{% endblock %}
