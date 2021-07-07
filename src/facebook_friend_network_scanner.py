@@ -1,6 +1,7 @@
 import json
 import re
 import time
+from typing import Callable, Optional
 import urllib
 
 import requests
@@ -43,7 +44,11 @@ class FacebookFriendNetworkScanner(object):
     @staticmethod
     def _create_driver(get_logs=False):  # pragma: no cover
         if not get_logs:
-            return webdriver.Chrome()  # if your chromedriver.exe inside root. Otherwise, insert the file path as the first argument
+            chrome_options = webdriver.chrome.options.Options()
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            # if your chromedriver.exe inside root. Otherwise, insert the file path as the first argument
+            return webdriver.Chrome(options=chrome_options)
 
         caps = DesiredCapabilities.CHROME
         caps['goog:loggingPrefs'] = {'performance': 'ALL'}
@@ -88,13 +93,23 @@ class FacebookFriendNetworkScanner(object):
         match = re.search(pattern, self.driver.page_source)
         return json.loads(match.group())[2]["token"]
 
-    def scan_network(self):
+    def scan_network(self, notify: Optional[Callable] = None):
+        def do_nothing(_):
+            pass
+
+        if notify is None:
+            notify = do_nothing
+
+        notify("Getting list of friends")
         self.read_all_friends_from_graphql_api()
 
+        notify("Start reading mutual connections between your friends")
         for i, friend in enumerate(self.friends, start=1):
-            print(f"Reading mutual friends with {friend.name}. ({i} of {len(self.friends)})")
+            notify(f"Reading mutual friends with {friend.name}. ({i} of {len(self.friends)})")
             self.read_mutual_friends_from_friend_profile(friend.user_id)
-            print(f"  Number of mutual friends: {len(self.mutual_friends[friend.user_id])}")
+            notify(f"  Number of mutual friends: {len(self.mutual_friends[friend.user_id])}")
+
+        notify("Finished scanning network")
 
     def save_network(self, output_file_name):
         with open(output_file_name, "w") as outfile:

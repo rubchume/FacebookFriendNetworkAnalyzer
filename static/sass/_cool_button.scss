@@ -1,0 +1,20 @@
+@import "color_variables";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+@mixin coolButton() {
+  background-color: $button_background_color;
+  border: none;
+  color: $text_color;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  &:hover {
+      background-color: $active_button_background_color;
+      color: $active_button_text_color;
+  }
+}

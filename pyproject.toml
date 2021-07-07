@@ -11,6 +11,9 @@ numpy = "^1.21.0"
 matplotlib = "^3.4.2"
 pandas = "1.2.5"
 networkx = "^2.5.1"
+Django = "^3.2.5"
+django-background-tasks = "^1.2.5"
+pytest-django = "^4.4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
@@ -40,7 +43,7 @@ source = ["src", "*/site-packages"]
 [tool.coverage.run]
 branch = true
 source = ["src"]
-omit = ["src/facebook_friend_network.py"]
+omit = ["src/friend_network.py"]
 
 [tool.coverage.report]
 show_missing = true

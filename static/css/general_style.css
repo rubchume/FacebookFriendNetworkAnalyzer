@@ -1,0 +1,266 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif&family=Open+Sans&family=Rouge+Script&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif&family=Open+Sans&family=Rouge+Script&display=swap");
+header {
+  background: #d8e9d8;
+  color: black;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+header h1 {
+  color: #111;
+  font-family: 'Rouge Script', sans-serif;
+  font-size: 60px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+  text-align: center;
+  margin: 0;
+  padding: 0.5vw 0.5vw;
+}
+
+header nav {
+  display: flex;
+}
+
+header nav ul {
+  margin: 0;
+  padding: 0vw;
+  display: flex;
+}
+
+header nav ul li {
+  list-style-type: none;
+  margin: 0;
+  font-size: 3vh;
+  padding: 0vw 2vw;
+  display: flex;
+  align-items: center;
+}
+
+header nav ul li a {
+  text-decoration: none;
+  color: black;
+  font-family: 'Open Sans', sans-serif;
+}
+
+header nav ul li:hover {
+  background-color: #1ac995;
+}
+
+header nav ul li:hover a {
+  color: white;
+}
+
+header nav button {
+  display: none;
+}
+
+@media only screen and (max-width: 500px) {
+  header nav ul {
+    flex-direction: column;
+  }
+  header nav li {
+    margin: 0;
+  }
+  header nav a {
+    display: block;
+  }
+  header nav button {
+    /*makes the button visible*/
+    display: block;
+    /*since we are here, we can style it a little bit!*/
+    padding: 2vw;
+    font-size: 3vh;
+    background-color: #AFE0FF;
+    border: none;
+    /*outline none removes the default blue border that appears anytime you click on the button*/
+    outline: none;
+    cursor: pointer;
+    align-self: flex-start;
+  }
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  color: black;
+  font-family: 'Noto Serif', sans-serif;
+  font-size: 14px;
+  line-height: 24px;
+  margin: 0 0 24px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+h1 {
+  color: #111;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 30px;
+  font-weight: 300;
+  line-height: 32px;
+  margin: 0 0 72px;
+  text-align: center;
+}
+
+h2 {
+  color: #111;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 200;
+  line-height: 32px;
+  margin: 0 0 72px;
+  text-align: center;
+}
+
+p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: black;
+  font-family: 'Noto Serif', sans-serif;
+  font-size: 14px;
+  line-height: 24px;
+  margin: 0 0 24px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.success {
+  color: #1ac995;
+}
+
+.error {
+  color: #fc5e03;
+}
+
+.button {
+  background-color: #99ff99;
+  border: none;
+  color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #1ac995;
+  color: white;
+}
+
+table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-spacing: 50px 10px;
+}
+
+table tr {
+  text-align: right;
+}
+
+table.list {
+  display: table;
+  border-collapse: collapse;
+  text-align: center;
+  table-layout: fixed;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.list tr {
+  text-align: center;
+}
+
+table.list td, table.list th {
+  border: 1px solid;
+}
+
+table.list tbody tr:nth-child(even) td:not(.item-actions) {
+  background: #d8e9d8;
+}
+
+table.list tbody tr:nth-child(odd) td:not(.item-actions) {
+  background: #E2EE8B;
+}
+
+table.list tbody tr td.item-actions {
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+}
+
+table.list thead {
+  background: #48A70B;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+form .helptext {
+  color: #685206;
+}
+
+form .errorlist {
+  color: #fc5e03;
+  list-style: none;
+}
+
+form .errorlist li:before {
+  content: "\e000";
+  /* https://github.com/google/material-design-icons/blob/master/iconfont/codepoints */
+  font-family: "Material Icons";
+  padding-right: 8px;
+  color: #f04022;
+}
+
+form table tr {
+  vertical-align: top;
+  text-align: left;
+}
+
+form input[type=submit] {
+  background-color: #99ff99;
+  border: none;
+  color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  background-color: #99ff99;
+}
+
+form input[type=submit]:hover {
+  background-color: #1ac995;
+  color: white;
+}
+
+img {
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+}
+
+a {
+  text-decoration: none
+}

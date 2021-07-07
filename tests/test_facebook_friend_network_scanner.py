@@ -282,3 +282,17 @@ class FacebookFriendNetworkScannerTests(TestCase):
             ],
             read_mutual_friends.call_args_list
         )
+
+    @mock.patch(
+        "src.facebook_friend_network_scanner.FacebookFriendNetworkScanner.read_mutual_friends_from_friend_profile",
+        autospec=True
+    )
+    @mock.patch.object(FacebookFriendNetworkScanner, "read_all_friends_from_graphql_api")
+    def test_scan_network_notifies_log_messages_to_input_function(self, read_all_friends, read_mutual_friends, _):
+        # Given
+        ffn = FacebookFriendNetworkScanner("username", "password")
+        notify = mock.MagicMock()
+        # When
+        ffn.scan_network(notify)
+        # Then
+        self.assertLess(0, notify.call_count)
