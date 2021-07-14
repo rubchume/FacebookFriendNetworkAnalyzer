@@ -1,0 +1,30 @@
+{
+  "name": "facebookfriendnetworkanalyzer",
+  "version": "1.0.0",
+  "description": "Author: Rubén Chuliá Mena <rchulia@outlook.com>",
+  "main": "main.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "request": "*",
+    "request-promise": "*"
+  },
+  "devDependencies": {
+    "electron": "^13.1.6"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/rubchume/facebookfriendnetworkanalyzer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/rubchume/facebookfriendnetworkanalyzer/issues"
+  },
+  "homepage": "https://gitlab.com/rubchume/facebookfriendnetworkanalyzer#readme"
+}
