@@ -4,3 +4,6 @@ __pycache__
 .ipynb_checkpoints
 .env
 data
+node_modules
+media
+
