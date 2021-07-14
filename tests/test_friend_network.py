@@ -3,8 +3,8 @@ from unittest import TestCase
 import pandas as pd
 from pandas._testing import assert_series_equal
 
-from src.friend_network import FriendNetwork
 from src.friend import Friend
+from src.friend_network import FriendNetwork
 from src.friend_set import FriendSet
 
 
