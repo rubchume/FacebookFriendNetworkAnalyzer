@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="{% static 'css/general_style.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    {% block header %}{% endblock %}
+
+    <title>{% block title %}Facebook Friend Network Scanner{% endblock %}</title>
+</head>
+
+<body>
+
+<header>
+    <a href="{% url 'home' %}"><h1>Facebook Friend Network Scanner</h1></a>
+
+    <nav>
+        {% block header_nav %}
+        {% endblock %}
+    </nav>
+</header>
+
+{% block content %}{% endblock %}
+
+</body>
+
+{% block footer %}{% endblock %}
+
+</html>

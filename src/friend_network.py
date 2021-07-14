@@ -12,14 +12,14 @@ from src.friend_set import FriendSet
 
 
 class FriendNetwork(object):
-    def __init__(self, friends: Optional[FriendSet] = None, common_friends: Optional[Dict[str, FriendSet]] = None):
+    def __init__(self, friends: Optional[FriendSet] = None, mutual_friends: Dict[str, FriendSet] = None):
         self.friends = friends or FriendSet([])
-        self.common_friends = common_friends or {}
+        self.mutual_friends = mutual_friends or FriendSet([])
 
         self.node_positions = None
         self.graph = nx.Graph()
 
-        if friends is not None and common_friends is not None:
+        if friends is not None and mutual_friends is not None:
             self.calculate_graph()
 
     def get_person_friends(self, **person_attributes) -> FriendSet:
@@ -43,11 +43,11 @@ class FriendNetwork(object):
             for friend_dict in network["friend_list"]
         ])
 
-        common_friends = {}
-        for friend_id, common_friends_dicts in network["common_friends"].items():
-            common_friends[friend_id] = FriendSet([Friend(**friend_dict) for friend_dict in common_friends_dicts])
+        mutual_friends = {}
+        for friend_id, mutual_friends_dicts in network["mutual_friends"].items():
+            mutual_friends[friend_id] = FriendSet([Friend(**friend_dict) for friend_dict in mutual_friends_dicts])
 
-        self.common_friends = common_friends
+        self.mutual_friends = mutual_friends
 
         self.calculate_graph()
         self.compute_positions()
@@ -62,11 +62,11 @@ class FriendNetwork(object):
         friends_info = self.get_friends_info()
 
         edges = []
-        for friend_id, common_friends in self.common_friends.items():
+        for friend_id, mutual_friends in self.mutual_friends.items():
             edges += [(
                 friend_id,
                 friends_info.iloc[(friends_info["link"] == friend.link).idxmax()].user_id
-            ) for friend in common_friends]
+            ) for friend in mutual_friends]
 
         return edges
 
@@ -81,16 +81,15 @@ class FriendNetwork(object):
     def compute_positions(self, layout=nx.spring_layout):
         self.node_positions = layout(self.graph)
 
-    def get_node_to_community_mapping(self, communities) -> pd.Series:
-        node_to_community = {}
-        for community_index, community in enumerate(communities, start=1):
-            node_to_community.update(
-                {node: community_index for node in community}
-            )
+    def communities_to_node_community_map(self, communities):
+        node_community_map = {}
+        for i, community in enumerate(communities):
+            node_community_map.update({node: i for node in community})
 
-        return pd.Series(node_to_community).reindex(self.graph.nodes).fillna(0).astype("int64")
+        return pd.Series(node_community_map).reindex(self.graph.nodes).fillna(0).astype("int64")
 
-    def draw_graph(self, node_scores=None, node_communities=None, label_proportion=0.1):  # pragma: no cover
+    def draw_graph(self, node_scores: Dict[str, float] = None, node_communities: Dict[str, int] = None,
+                   label_proportion=0.1):
         def get_random_labels(p):
             labels = {}
             for userid, name in nx.get_node_attributes(self.graph, 'name').items():
@@ -117,10 +116,10 @@ class FriendNetwork(object):
         else:
             labels = get_random_labels(label_proportion)
             if node_communities is not None:
-                node_to_community_mapping = self.get_node_to_community_mapping(node_communities)
-                color = cm.get_cmap('Paired')(node_to_community_mapping)
+                node_community_map = self.communities_to_node_community_map(node_communities)
+                color = cm.get_cmap('Paired')(node_community_map.values)
 
-        nx.draw(
+        return nx.draw(
             self.graph,
             pos=self.node_positions,
             node_size=45,
@@ -130,5 +129,3 @@ class FriendNetwork(object):
             with_labels=True,
             labels=labels
         )
-
-        return ax
