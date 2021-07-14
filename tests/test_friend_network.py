@@ -27,7 +27,7 @@ class FacebookFriendNetworkTests(TestCase):
                 "123": FriendSet([Friend(user_id="456", name="Pau", link="pau.com", gender="MALE")]),
                 "456": FriendSet([Friend(user_id="123", name="Ruf", link="ruf.com", gender="MALE")]),
             },
-            ffn.common_friends
+            ffn.mutual_friends
         )
 
     def test_get_node_to_community_mapping(self):
@@ -48,10 +48,9 @@ class FacebookFriendNetworkTests(TestCase):
                 Friend(user_id="8"),
                 Friend(user_id="9"),
             ]),
-            common_friends={},
         )
         # When
-        community_mapping = ffn.get_node_to_community_mapping(communities)
+        community_mapping = ffn.communities_to_node_community_map(communities)
         # Then
         assert_series_equal(
             pd.Series([1, 2, 1, 2, 1, 2, 1, 0, 2], index=["1", "2", "3", "4", "5", "6", "7", "8", "9"]),

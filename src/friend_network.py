@@ -14,12 +14,12 @@ from src.friend_set import FriendSet
 class FriendNetwork(object):
     def __init__(self, friends: Optional[FriendSet] = None, mutual_friends: Dict[str, FriendSet] = None):
         self.friends = friends or FriendSet([])
-        self.mutual_friends = mutual_friends or FriendSet([])
+        self.mutual_friends = mutual_friends or {}
 
         self.node_positions = None
         self.graph = nx.Graph()
 
-        if friends is not None and mutual_friends is not None:
+        if friends is not None:
             self.calculate_graph()
 
     def get_person_friends(self, **person_attributes) -> FriendSet:
@@ -83,7 +83,7 @@ class FriendNetwork(object):
 
     def communities_to_node_community_map(self, communities):
         node_community_map = {}
-        for i, community in enumerate(communities):
+        for i, community in enumerate(communities, start=1):
             node_community_map.update({node: i for node in community})
 
         return pd.Series(node_community_map).reindex(self.graph.nodes).fillna(0).astype("int64")
