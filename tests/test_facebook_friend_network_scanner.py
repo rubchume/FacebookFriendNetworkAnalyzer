@@ -79,6 +79,38 @@ class FacebookFriendNetworkScannerTests(TestCase):
         # Finally
         os.remove("tests/helpers/output_file.json")
 
+    def test_infer_user_id_from_profile_link_if_mutual_friend_user_id_is_missing(self, _):
+        # Given
+        ffn = FacebookFriendNetworkScanner("username", "password")
+        ffn.friends = [
+            Friend(user_id="111", name="Pedro", link="pedro.com"),
+            Friend(user_id="222", name="Rufus", link="rufusbajista.com"),
+            Friend(user_id="333", name="Juni", link="juni.com", gender="FEMALE"),
+            Friend(user_id="444", name="AleyDani", link="dosecuatorianosymedio.com"),
+        ]
+        ffn.mutual_friends["111"] = [
+            Friend(name="Rufus", link="rufusbajista.com"),
+        ]
+        ffn.mutual_friends["444"] = [
+            Friend(name="Rufus", link="rufusbajista.com"),
+            Friend(name="Juni", link="juni.com"),
+        ]
+        # When
+        ffn.infer_missing_user_ids_from_profile_link()
+        ffn.save_network("tests/helpers/output_file.json")
+        # Then
+        self.assertEqual(
+            [Friend(user_id="222", name="Rufus", link="rufusbajista.com")],
+            ffn.mutual_friends["111"]
+        )
+        self.assertEqual(
+            [
+                Friend(user_id="222", name="Rufus", link="rufusbajista.com"),
+                Friend(user_id="333", name="Juni", link="juni.com"),
+            ],
+            ffn.mutual_friends["444"]
+        )
+
     @mock.patch.object(FacebookFriendNetworkScanner, "_mutual_friends_page_is_loading", return_value=False)
     @mock.patch.object(
         FacebookFriendNetworkScanner,

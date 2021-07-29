@@ -13,6 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from src.friend import Friend
+from src.friend_set import FriendSet
 
 
 class FacebookFriendNetworkScanner(object):
@@ -108,6 +109,8 @@ class FacebookFriendNetworkScanner(object):
             notify(f"Reading mutual friends with {friend.name}. ({i} of {len(self.friends)})")
             self.read_mutual_friends_from_friend_profile(friend.user_id)
             notify(f"  Number of mutual friends: {len(self.mutual_friends[friend.user_id])}")
+
+        self.infer_missing_user_ids_from_profile_link()
 
         notify("Finished scanning network")
 
@@ -246,6 +249,14 @@ class FacebookFriendNetworkScanner(object):
             )
             for friend_card in friend_cards
         ]
+
+    def infer_missing_user_ids_from_profile_link(self):
+        friend_set = FriendSet(self.friends)
+
+        for _, mutual_friends in self.mutual_friends.items():
+            for mutual_friend in mutual_friends:
+                if mutual_friend.user_id is None:
+                    mutual_friend.user_id = friend_set.filter(link=mutual_friend.link).user_id
 
     def _get_friend_by_id(self, friend_id):
         return [friend for friend in self.friends if friend.user_id == friend_id][0]

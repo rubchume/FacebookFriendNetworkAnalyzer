@@ -1,5 +1,6 @@
+import hashlib
 import json
-from typing import Dict, Optional
+from typing import Dict, Optional, Set, Tuple
 
 from matplotlib import cm
 import matplotlib.pyplot as plt
@@ -52,6 +53,39 @@ class FriendNetwork(object):
         self.calculate_graph()
         self.compute_positions()
 
+    def save_network(self, output_file_name):
+        with open(output_file_name, "w") as outfile:
+            json.dump(
+                dict(
+                    friend_list=[vars(friend) for friend in self.friends],
+                    mutual_friends={
+                        friend: [vars(mutual_friend) for mutual_friend in mutual_friends]
+                        for friend, mutual_friends in self.mutual_friends.items()
+                    }
+                ),
+                outfile
+            )
+
+    def anonymize(self):
+        def get_hash(string):
+            return hashlib.sha256(string.encode()).hexdigest()
+
+        for friend in self.friends:
+            user_id = friend.user_id
+            anonymous_id = get_hash(user_id)
+            friend.user_id = anonymous_id
+            friend.name = anonymous_id
+            friend.link = anonymous_id
+
+            self.mutual_friends[anonymous_id] = self.mutual_friends.pop(user_id)
+
+        for _, mutual_friends in self.mutual_friends.items():
+            for mutual_friend in mutual_friends:
+                anonymous_id = get_hash(mutual_friend.user_id)
+                mutual_friend.user_id = anonymous_id
+                mutual_friend.name = anonymous_id
+                mutual_friend.link = anonymous_id
+
     def calculate_graph(self):
         self.graph = nx.Graph()
         self.graph.add_nodes_from([(friend.user_id, dict(name=friend.name)) for friend in self.friends])
@@ -78,8 +112,8 @@ class FriendNetwork(object):
         self.graph = self.graph.subgraph(biggest_component_nodes)
         self.compute_positions()
 
-    def compute_positions(self, layout=nx.spring_layout):
-        self.node_positions = layout(self.graph)
+    def compute_positions(self, layout=nx.spring_layout, seed=None):
+        self.node_positions = layout(self.graph, seed=seed)
 
     def communities_to_node_community_map(self, communities):
         node_community_map = {}
@@ -88,8 +122,7 @@ class FriendNetwork(object):
 
         return pd.Series(node_community_map).reindex(self.graph.nodes).fillna(0).astype("int64")
 
-    def draw_graph(self, node_scores: Dict[str, float] = None, node_communities: Dict[str, int] = None,
-                   label_proportion=0.1):
+    def draw_graph(self, node_scores: Dict[str, float] = None, node_communities: Tuple[Set] = None, label_proportion=0.1):
         def get_random_labels(p):
             labels = {}
             for userid, name in nx.get_node_attributes(self.graph, 'name').items():
