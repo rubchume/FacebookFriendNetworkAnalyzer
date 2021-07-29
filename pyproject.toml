@@ -14,6 +14,7 @@ networkx = "^2.5.1"
 Django = "^3.2.5"
 django-background-tasks = "^1.2.5"
 pytest-django = "^4.4.0"
+plotly = "^5.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
