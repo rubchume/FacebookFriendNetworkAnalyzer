@@ -19,7 +19,7 @@ class FriendNetwork(object):
         self.friends = friends or FriendSet([])
         self.mutual_friends = mutual_friends or {}
 
-        self.node_positions = None
+        self.node_positions: Dict = {}
         self.graph = nx.Graph()
 
         if friends is not None:
