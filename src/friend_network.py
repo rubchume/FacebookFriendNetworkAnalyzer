@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 
 from src.friend import Friend
 from src.friend_set import FriendSet
@@ -122,7 +124,9 @@ class FriendNetwork(object):
 
         return pd.Series(node_community_map).reindex(self.graph.nodes).fillna(0).astype("int64")
 
-    def draw_graph(self, node_scores: Dict[str, float] = None, node_communities: Tuple[Set] = None, label_proportion=0.1):
+    def draw_graph_matplotlib(
+            self, node_scores: Dict[str, float] = None, communities: Tuple[Set] = None, label_proportion=0.1
+    ):
         def get_random_labels(p):
             labels = {}
             for userid, name in nx.get_node_attributes(self.graph, 'name').items():
@@ -130,8 +134,6 @@ class FriendNetwork(object):
                     labels[userid] = name
 
             return labels
-
-        fig, ax = plt.subplots(1, 1, figsize=(20, 20))
 
         color = None
 
@@ -148,9 +150,11 @@ class FriendNetwork(object):
             color = node_scores_series
         else:
             labels = get_random_labels(label_proportion)
-            if node_communities is not None:
-                node_community_map = self.communities_to_node_community_map(node_communities)
+            if communities is not None:
+                node_community_map = self.communities_to_node_community_map(communities)
                 color = cm.get_cmap('Paired')(node_community_map.values)
+
+        fig, ax = plt.subplots(1, 1, figsize=(20, 20))
 
         return nx.draw(
             self.graph,
@@ -161,4 +165,78 @@ class FriendNetwork(object):
             ax=ax,
             with_labels=True,
             labels=labels
+        )
+
+    def draw_graph_plotly(self, node_scores: Dict[str, float] = None, communities: Tuple[Set] = None):
+        def get_nodes_color():
+            color = None
+
+            if node_scores is not None:
+                color = pd.Series(node_scores).loc[list(self.graph.nodes)]
+                custom_data = color
+            else:
+                if communities is not None:
+                    node_community_map = self.communities_to_node_community_map(communities)
+                    color = node_community_map.values
+                    custom_data = node_community_map
+
+            return color, custom_data
+
+        positions = [position for _, position in self.node_positions.items()]
+        x, y = np.vstack(positions).T
+
+        lines = []
+        for a, b in self.graph.edges():
+            xa, ya = self.node_positions[a]
+            xb, yb = self.node_positions[b]
+
+            lines.append(
+                go.Scatter(
+                    x=[xa, xb],
+                    y=[ya, yb],
+                    line_color="black",
+                    line_width=1,
+                    opacity=0.2,
+                    showlegend=False,
+                    hovertemplate=None,
+                    mode="lines"
+                )
+            )
+
+        color, custom_data = get_nodes_color()
+
+        cmap = px.colors.qualitative.Plotly
+
+        return go.Figure(
+            data=lines + [
+                go.Scatter(
+                    x=x,
+                    y=y,
+                    mode="markers",
+                    marker=dict(
+                        color=color,
+                        cmin=1,
+                        cmax=len(cmap),
+                        colorscale=cmap,
+                    ),
+                    customdata=custom_data,
+                    text=[name for _, name in nx.get_node_attributes(self.graph, "name").items()],
+                    hovertemplate="%{text} (%{customdata})<extra></extra>",
+                    showlegend=False,
+                )
+            ],
+            layout=go.Layout(
+                xaxis=go.layout.XAxis(
+                    showticklabels=False,
+                    showgrid=False,
+                    zeroline=False,
+                ),
+                yaxis=go.layout.YAxis(
+                    showticklabels=False,
+                    showgrid=False,
+                    zeroline=False,
+                ),
+                width=1000,
+                height=1000
+            )
         )

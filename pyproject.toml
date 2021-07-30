@@ -45,7 +45,7 @@ source = ["src", "*/site-packages"]
 [tool.coverage.run]
 branch = true
 source = ["src"]
-#omit = ["src/friend_network.py"]
+omit = ["src/friend_network.py"] # TODO: Finish testing the file
 
 [tool.coverage.report]
 show_missing = true
