@@ -169,16 +169,16 @@ class FriendNetwork(object):
 
     def draw_graph_plotly(self, node_scores: Dict[str, float] = None, communities: Tuple[Set] = None):
         def get_nodes_color():
-            color = None
+            if node_scores is None and communities is None:
+                return None, None
 
             if node_scores is not None:
                 color = pd.Series(node_scores).loc[list(self.graph.nodes)]
                 custom_data = color
             else:
-                if communities is not None:
-                    node_community_map = self.communities_to_node_community_map(communities)
-                    color = node_community_map.values
-                    custom_data = node_community_map
+                node_community_map = self.communities_to_node_community_map(communities)
+                color = node_community_map.values
+                custom_data = node_community_map
 
             return color, custom_data
 
@@ -221,7 +221,7 @@ class FriendNetwork(object):
                     ),
                     customdata=custom_data,
                     text=[name for _, name in nx.get_node_attributes(self.graph, "name").items()],
-                    hovertemplate="%{text} (%{customdata})<extra></extra>",
+                    hovertemplate="%{text} (%{customdata})<extra></extra>" if custom_data is not None else "%{text}<extra></extra>",
                     showlegend=False,
                 )
             ],

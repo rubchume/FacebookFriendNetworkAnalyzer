@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Choose Network{% endblock %}
+
+{% block content %}
+
+{% for scan_instance in scan_instances %}
+<a href="{% url 'analysis' scan_instance.pk %}">{{scan_instance.user}} ({{scan_instance.datetime}})</a>
+<br>
+{% endfor %}
+
+{% endblock %}

@@ -11,7 +11,9 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
 
+from src import facebook_css_selectors
 from src.friend import Friend
 from src.friend_set import FriendSet
 
@@ -24,14 +26,14 @@ class FacebookFriendNetworkScanner(object):
 
     TIME_TO_LOGIN = 3
 
-    def __init__(self, user, password):
+    def __init__(self, user, password, visible_browser=False):
         self.friends = []
         self.mutual_friends = {}
 
         self._friend_list_page_info = dict(has_next_page=True, end_cursor=None)
         self._mutual_friends_list_page_info = {}
 
-        self.driver = self._create_driver()
+        self.driver = self._create_driver(visible_browser=visible_browser)
         self._log_into_facebook(self.driver, user, password)
         time.sleep(self.TIME_TO_LOGIN)
         self.driver.get("https://www.facebook.com/friends/list")
@@ -43,17 +45,18 @@ class FacebookFriendNetworkScanner(object):
         print("Facebook Friend Network initialized")
 
     @staticmethod
-    def _create_driver(get_logs=False):  # pragma: no cover
+    def _create_driver(get_logs=False, visible_browser=False):  # pragma: no cover
         if not get_logs:
             chrome_options = webdriver.chrome.options.Options()
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument('--no-sandbox')
+            if not visible_browser:
+                chrome_options.add_argument("--headless")
+                chrome_options.add_argument('--no-sandbox')
             # if your chromedriver.exe inside root. Otherwise, insert the file path as the first argument
-            return webdriver.Chrome(options=chrome_options)
+            return webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
 
         caps = DesiredCapabilities.CHROME
         caps['goog:loggingPrefs'] = {'performance': 'ALL'}
-        return webdriver.Chrome(desired_capabilities=caps)
+        return webdriver.Chrome(ChromeDriverManager().install(), desired_capabilities=caps)
 
     @staticmethod
     def _log_into_facebook(driver, user, password):  # pragma: no cover
@@ -221,24 +224,20 @@ class FacebookFriendNetworkScanner(object):
 
     @staticmethod
     def _mutual_friends_page_is_loading_from_html(driver):
-        loading_mutual_friends_panel_class = "lzcic4wl j83agx80 btwxx1t3 lhclo0ds i1fnvgqd"
         element = driver.find_elements_by_css_selector(
-            f"div[class='{loading_mutual_friends_panel_class}'][aria-busy='true']"
+            facebook_css_selectors.loading_mutual_friends_panel
         )
         return len(element) > 0
 
     @staticmethod
     def _get_mutual_friends_from_mutual_friends_html(driver):
         mutual_friends_pannel = driver.find_element_by_css_selector(
-            "div[data-pagelet='ProfileAppSection_0']"
+            facebook_css_selectors.mutual_friends_panel
         )
 
-        mutual_friend_card_link_class = (
-            "oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv"
-            " nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x"
-            " jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gmql0nx0 gpro0wi8"
+        cards = mutual_friends_pannel.find_elements_by_css_selector(
+            facebook_css_selectors.mutual_friend_cards
         )
-        cards = mutual_friends_pannel.find_elements_by_css_selector(f"a[class='{mutual_friend_card_link_class}']")
 
         friend_cards = [FriendCard(card) for card in cards]
 
