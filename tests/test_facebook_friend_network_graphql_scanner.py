@@ -26,6 +26,8 @@ class FacebookFriendNetworkGraphQLScannerTests(TestCase):
         driver_mock.page_source = self.html
         self.driver_mock = driver_mock
 
+        mock.patch("src.facebook_friend_network_scanner.ChromeDriverManager").start()
+
     @requests_mock.Mocker()
     def test_get_one_page_of_common_friends(self, _, req_mock):
         # Given

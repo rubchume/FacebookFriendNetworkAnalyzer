@@ -1,14 +1,20 @@
 import os
+from pathlib import Path
 
 from background_task import background
 from django.conf import settings
 from django.core.files import File
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
+import plotly.offline as opy
+from networkx.algorithms.community import asyn_fluidc
 
 from core.forms import LogInForm
 from core.models import LogEvent, ScanInstance
 from src.facebook_friend_network_scanner import FacebookFriendNetworkScanner
+from src.friend_network import FriendNetwork
+
+
 
 
 class HomeView(TemplateView):
@@ -71,3 +77,60 @@ class ScanView(TemplateView):
         context["log"] = events
         return context
 
+
+class ChooseNetworkView(TemplateView):
+    template_name = "core/choose_network.html"
+
+    def get_context_data(self, **kwargs):
+        distinct_users = ScanInstance.objects.values_list("user", flat=True).distinct()
+        scan_instances = [
+            ScanInstance.objects.filter(user=user).order_by("-datetime")[0]
+            for user in distinct_users
+        ]
+
+        context = super().get_context_data(**kwargs)
+        context["scan_instances"] = scan_instances
+
+        return context
+
+
+class AnalysisView(TemplateView):
+    template_name = "core/analysis.html"
+
+    def get(self, request, *args, **kwargs):
+        instance = ScanInstance.objects.get(pk=kwargs["pk"])
+
+        filename = str(Path(settings.MEDIA_ROOT).joinpath(instance.file.name))
+
+        fn = FriendNetwork()
+        fn.load_network(filename)
+        fn.filter_biggest_component()
+        fn.compute_positions(seed=0)
+
+        fig = fn.draw_graph_plotly()
+        div = opy.plot(fig, auto_open=False, output_type="div")
+
+        context = self.get_context_data(**kwargs)
+        context["graph"] = div
+
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        instance = ScanInstance.objects.get(pk=kwargs["pk"])
+
+        filename = str(Path(settings.MEDIA_ROOT).joinpath(instance.file.name))
+
+        fn = FriendNetwork()
+        fn.load_network(filename)
+        fn.filter_biggest_component()
+        fn.compute_positions(seed=0)
+
+        community_division = list(asyn_fluidc(fn.graph, int(request.POST["num_communities"])))
+        fig = fn.draw_graph_plotly(communities=community_division)
+
+        div = opy.plot(fig, auto_open=False, output_type="div")
+
+        context = self.get_context_data(**kwargs)
+        context["graph"] = div
+
+        return self.render_to_response(context)

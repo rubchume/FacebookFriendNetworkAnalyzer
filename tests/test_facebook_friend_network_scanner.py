@@ -5,6 +5,7 @@ from unittest import mock, TestCase
 import requests_mock
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from webdriver_manager.chrome import ChromeDriverManager
 
 from src.facebook_friend_network_scanner import FacebookFriendNetworkScanner
 from src.friend import Friend
@@ -145,11 +146,12 @@ class FacebookFriendNetworkScannerTests(TestCase):
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument("--headless")
         chrome_options.add_argument('--disable-dev-shm-usage')
-        if os.environ.get("GITLAB_CI", None) is not None:
-            chrome_driver_path = os.path.join(os.getcwd(), "chromedriver_linux")
-        else:
-            chrome_driver_path = "chromedriver"
-        driver = webdriver.Chrome(os.path.join(os.getcwd(), chrome_driver_path), options=chrome_options)
+        # if os.environ.get("GITLAB_CI", None) is not None:
+        #     chrome_driver_path = os.path.join(os.getcwd(), "chromedriver_linux")
+        # else:
+        #     chrome_driver_path = "chromedriver"
+        # driver = webdriver.Chrome(os.path.join(os.getcwd(), chrome_driver_path), options=chrome_options)
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
         driver.get('file:///' + os.getcwd() + '/tests/helpers/common_friends_page.html')
         # When
         friends = FacebookFriendNetworkScanner._get_mutual_friends_from_mutual_friends_html(driver)
@@ -198,12 +200,12 @@ class FacebookFriendNetworkScannerTests(TestCase):
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument("--headless")
         chrome_options.add_argument('--disable-dev-shm-usage')
-        if os.environ.get("GITLAB_CI", None) is not None:
-            chrome_driver_path = os.path.join(os.getcwd(), "chromedriver_linux")
-        else:
-            chrome_driver_path = "chromedriver"
-
-        driver = webdriver.Chrome(chrome_driver_path, options=chrome_options)
+        # if os.environ.get("GITLAB_CI", None) is not None:
+        #     chrome_driver_path = os.path.join(os.getcwd(), "chromedriver_linux")
+        # else:
+        #     chrome_driver_path = "chromedriver"
+        # driver = webdriver.Chrome(chrome_driver_path, options=chrome_options)
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
         # When
         driver.get('file:///' + os.getcwd() + '/tests/helpers/common_friends_page.html')
         # Then

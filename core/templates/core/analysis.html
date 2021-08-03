@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Analysis{% endblock %}
+
+{% block content %}
+<div>
+    <form action="{% url 'analysis' view.kwargs.pk %}" method="post">{% csrf_token %}
+        <label for="num_communities">Number of communities: </label>
+        <input id="num_communities" type="number" name="num_communities" min="2" max="12">
+        <input class="button" type="submit" value="Divide into communities">
+    </form>
+</div>
+
+<div style="width:600;height:500">
+{{ graph|safe }}
+</div>
+{% endblock %}
