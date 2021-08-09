@@ -158,10 +158,7 @@ class FacebookFriendNetworkScanner(object):
             "referrerPolicy": "strict-origin-when-cross-origin",
         }
 
-        session = requests.session()
-        session.cookies.update({cookie["name"]: cookie["value"] for cookie in self.driver.get_cookies()})
-
-        response = session.post(
+        response = self.session.post(
             url,
             headers=headers,
             data=urllib.parse.urlencode(
