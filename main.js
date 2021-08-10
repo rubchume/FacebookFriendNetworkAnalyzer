@@ -11,6 +11,7 @@ let mainWindow
 
 function createWindow() {
 
+	var subpy0 = require('child_process').spawn('python', ['./manage.py', 'delete_scan_instances_with_missing_file']);
 	var subpy = require('child_process').spawn('python', ['./manage.py', 'runserver']);
 	var subpy2 = require('child_process').spawn('python', ['./manage.py', 'process_tasks']);
     var rq = require('request-promise');
@@ -21,6 +22,7 @@ function createWindow() {
         mainWindow.on('closed', function() {
             mainWindow = null;
             subpy.kill('SIGINT');
+            subpy2.kill('SIGINT');
         })
     }
     var startUp = function() {
