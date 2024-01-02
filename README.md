@@ -10,7 +10,7 @@ Finally, all of this is wrapped up in a simple GUI.
 
 In summary, a mix of techniques and technologies that create a cool application for exploring your social from a network analysis standpoint.
 
-You can read more in this [article](https://www.listeningtothedata.com/posts/read-your-network-of-friends-in-facebook-by-scraping-with-python/) and this [article](https://www.listeningtothedata.com/posts/organize-your-wedding-with-social-network-analysis-in-python/).
+You can read more in this [article](https://medium.com/analytics-vidhya/read-your-network-of-friends-in-facebook-by-scraping-with-python-a012adabb713) and this [article](https://rubchume.medium.com/organize-your-wedding-with-social-network-analysis-in-python-aeab9d8814b3).
 
 ## Approach
 The application is implemented in the Python.
