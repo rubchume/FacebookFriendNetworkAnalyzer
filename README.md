@@ -1,9 +1,37 @@
-Author: Rubén Chuliá Mena <rubchume@gmail.com>
+# Introduction
 
-This web app uses Django and Electron to make it easy to scan the your Facebook network and visualize it with Plotly.
+## About the app
 
-Refer to this [article](https://www.listeningtothedata.com/posts/read-your-network-of-friends-in-facebook-by-scraping-with-python/) and this [article](https://www.listeningtothedata.com/posts/organize-your-wedding-with-social-network-analysis-in-python/) to understand what this app does.
+This project is about web scraping your personal (my personal, but you should work on yours) Facebook profile using Selenium from Python.
 
+With this tool you can download the information about which of your friends are friends between them, and which of them don't know each other.
+Then you can find the different communities among your friends with social network analysis algorithms and finally visualize them in interactive plots.
+Finally, all of this is wrapped up in a simple GUI.
+
+In summary, a mix of techniques and technologies that create a cool application for exploring your social from a network analysis standpoint.
+
+You can read more in this [article](https://www.listeningtothedata.com/posts/read-your-network-of-friends-in-facebook-by-scraping-with-python/) and this [article](https://www.listeningtothedata.com/posts/organize-your-wedding-with-social-network-analysis-in-python/).
+
+## Approach
+The application is implemented in the Python.
+
+The package used for network analysis is [NetworkX](https://networkx.org/).
+
+The interactive visualizations are created using [Plotly](https://plotly.com/).
+
+The GUI uses [Electron](https://www.electronjs.org/) for the frontend, and [Django](https://www.djangoproject.com/) as a backend.
+
+## Conclusions
+
+Even though I didn't perform a thorough analysis but a visual exploration, there were some curious findings that you might replicate with your network.
+Among other things, I realized that almost all of my friends are connected.
+
+When there is a dense network of friends (dots of the same color) that is connected by just one connection to other community, in almost all cases the connection is a surprise you didn't know.
+For example, I discovered that a cousin of mine knew one of my childhood friends, and that a person I knew while studying in another country knows one of my salsa lessons classmates.
+
+What do you think you will discover?
+
+# How to use
 The welcome page has three buttons:
 ![welcom page](sample_data/main_page.PNG)
 You can press the header "Facebook Friend Network Scanner" to come back to the main page at any moment.
@@ -33,7 +61,8 @@ Beware Facebook changes its web and API often, so this web app will very likely 
 
 Check out the previously mentioned [article](https://www.listeningtothedata.com/posts/read-your-network-of-friends-in-facebook-by-scraping-with-python/) in order to find out how you can do it.   
 
-# Installation of packages
+# Setup
+## Installation of packages
 The application needs to be executed in an environment with Python 3.8 installed.
 
 If this is the case, proceed with the installation of necessary packages. Open the CLI (Command Line Interface) and execute:
@@ -41,7 +70,7 @@ If this is the case, proceed with the installation of necessary packages. Open t
 pip install -r requirements.txt
 ```
 
-# Execution
+## Execution
 ```
 npm start
 ```
@@ -52,7 +81,7 @@ start_analyzer.sh
 ```
 and visit http://127.0.0.1:8000/.
 
-# Test
+## Test
 Test the application with Pytest using
 ```bash
 python -m pytest
